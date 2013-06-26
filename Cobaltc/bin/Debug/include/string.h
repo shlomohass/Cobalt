@@ -1,15 +1,9 @@
 
-#ifndef string_h__
-	#define string_h__
+#ifndef STRING_H
+#define STRING_H
 
-#ifndef NULL
-	#define NULL 0
-#endif
-
-#ifndef SIZE_T
-	#define SIZE_T
-	typedef unsigned int size_t; 
-#endif
+#include <sizet.h>
+#define NULL 0
 
 extern int strlen(const char* str);
 extern char* strrchr (const char* str, char ch);

@@ -6,10 +6,8 @@ using GruntXProductions;
 
 namespace Cobaltc
 {
-	public class DoStatement : SyntaxNode
+	public class DoStatement :  Loop 
 	{
-		public Expression Compare = new Expression();
-		public Block Body = new Block();
 	}
 }
 

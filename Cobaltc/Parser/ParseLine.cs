@@ -63,6 +63,10 @@ namespace Cobaltc
 			{
 				return ParseDoStatement();
 			}
+			else if (peekToken().ToString() == "try")
+			{
+				return ParseTry();
+			}
 			else if (peekToken() is Tokens.Statement && peekToken(1) is Tokens.Assign)
 			{
 				Assignment asn = ParseAssignment();

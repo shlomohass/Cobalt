@@ -20,6 +20,11 @@ namespace Cobaltc
 				CompileIntExpression(sn as Expression);
 			else if (sn is GetAccessor)
 				CompileGetIndex(sn as GetAccessor);
+			else if (sn is Not)
+			{
+				GetIntValue(((Not)sn).Op);
+				Assembler.Emit(new not());
+			}
 			else if (sn is PointerReference)
 			{
 				PointerReference ptr = sn as PointerReference;
@@ -79,7 +84,8 @@ namespace Cobaltc
 			else
 				Errors.Add("Unexpected " + sn.ToString());
 		}
-		public void CompileIntExpression(Expression exp)
+		
+		public void CompileIntExpression(Expression exp, bool Signed = false)
 		{
 			foreach(SyntaxNode sn in exp.Value)
 			{
@@ -130,22 +136,7 @@ namespace Cobaltc
 				else if(sn is BinOp)
 				{
 					BinOp op = sn as BinOp;
-					GetIntValue(op.Op1);
-					GetIntValue(op.Op2);
-					if(op is Add)
-						Assembler.Emit(new Viper.Opcodes.Add());
-					else if (op is Sub)
-						Assembler.Emit(new Viper.Opcodes.sub());
-					else if (op is Mul)
-						Assembler.Emit(new mul());
-					else if (op is Div)
-						Assembler.Emit(new div());
-					else if (op is Mod)
-						Assembler.Emit(new mod());
-					else
-					{
-						Errors.Add(op.ToString() + " can not be used on type int");
-					}
+					CompileBinOp(op, Signed);
 				}
 				else
 				{

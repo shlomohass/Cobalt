@@ -13,13 +13,15 @@ namespace Cobaltc
 		{
 			int neg = -1;
 			uint id = (uint)neg;
+			
 			Console.WriteLine(id.ToString());
 			if(args.Length == 0)
 				Console.Error.WriteLine("No input!");
 			else
 			{
-				string Input = args[0];
+				string Input = Environment.CurrentDirectory + "/" + args[0];
 				string Output = null;
+				Environment.CurrentDirectory = Path.GetDirectoryName(args[0]);
 				Assembly prog = new Assembly();
 				List<string> references = new List<string>();
 				for(int i = 0; i < args.Length; i++)
@@ -39,32 +41,35 @@ namespace Cobaltc
 					Output = Path.GetFileNameWithoutExtension(Input) + ".gex";
 				
 				CodeGen cgen = null;
+				Parser parser = null;
 				try
 				{
-					Parser parser = new Parser();
+					parser = new Parser();
 					parser.BeginParse(File.ReadAllText(Input));
 					cgen = new CodeGen(prog,parser.ParseTree);
 					cgen.Compile();
 					foreach(string lib in references)
-						cgen.Assembler.Merge(GEX.Open(lib));
+						cgen.Assembler.Merge(GEX.Open(lib, false));
+					cgen.Assembler.Metadata.Add("languagef","cobalt");
+					cgen.Assembler.CreateMethodAttribute("test",new System.Collections.Specialized.NameValueCollection());
 					cgen.Assembler.SaveGEX(Output);
-					Assembly test = Disassembler.Disassemble(GEX.Open("test.gex"));
-					foreach(Instruction il in test.innerCode)
-					{
-						Console.WriteLine(il.Mnemonic + " " + il.Operand);
-					}
+					
+					
 				}
 				catch(ParserException exp)
 				{
 					Console.Error.WriteLine("Fatal error during parsing: " + exp.Error);
+					if(parser.ParserErrors.Count > 0)
+					{
+						foreach(string err in parser.ParserErrors)
+							Console.Error.WriteLine(err);
+					}
 				}
 				catch(CodeGenException exp)
 				{
 					Console.Error.WriteLine(exp.Error);
 					foreach(string err in cgen.Errors)
-					{
 						Console.Error.WriteLine(err);
-					}
 				}
 				catch (Exception exp)
 				{

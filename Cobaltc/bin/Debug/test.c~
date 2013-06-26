@@ -1,13 +1,26 @@
+
+
 // This is a comment!
 
-#include "stdio.h"
-#include "string.h"
-#include "ctype.h"
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
 void main()
 {
-	puts("Hello World in Cobalt!");
-	gets()
-	
+	printf("This application is signed using a trusted certificate! And as a result, no prompt was displayed!\n");
+	char* buff = malloc(30);
+	printf("Type something:");
+	gets(buff);
+	printf("You typed %s!\n", buff);
 }
+void lol()
+{
+	printf("lol!\n");
+}
+
+
+
+
+
 

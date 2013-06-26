@@ -10,21 +10,53 @@ namespace Cobaltc
 {
 	public partial class CodeGen
 	{
-		public void DeclareVar(Declaration decl)
+		public void DeclareVar(DeclarationGroup decl, bool Global = false)
 		{
-			
+			foreach(Declaration dec in decl.Declarations)
+				DeclareVar(dec,Global);
+		}
+		public void DeclareVar(Declaration decl, bool Global = false)
+		{
+			if(decl is DeclarationGroup)
+			{
+				DeclareVar(decl as DeclarationGroup, Global);
+				return;
+			}
 			if(getTypeFromName(decl.Type) == VType.Int32)
-				SymHelper.DeclareInt32(decl.Name, decl.Pointer, decl.Constant);	
+				SymHelper.DeclareInt32(decl.Name, Global, decl.Pointer, decl.Constant);	
 			else if (getTypeFromName(decl.Type) == VType.Int8)
-				SymHelper.DeclareInt8(decl.Name, decl.Pointer, decl.Constant);
+				SymHelper.DeclareInt8(decl.Name,  Global,decl.Pointer, decl.Constant);
 			else if (getTypeFromName(decl.Type) == VType.Void && decl.Pointer)
-				SymHelper.DeclareVoidPtr(decl.Name, decl.Constant);
+				SymHelper.DeclareVoidPtr(decl.Name, Global,decl.Constant);
 			else
 			{
 				Errors.Add(decl.Type + " does not exist in the current context!");
 			}
 			if(decl.Assign.Value.Value.Count > 0)
-				Assign(decl.Assign, true);
+			{
+				if(decl.Static)
+				{
+					if(getTypeFromName(decl.Type) == VType.Int32)
+					{
+						Assembler.Emit(new push_ptr(decl.Name));	
+						Assembler.Emit(new dload());
+					}
+					else if(getTypeFromName(decl.Type) == VType.Int8)
+					{
+						Assembler.Emit(new push_ptr(decl.Name));	
+						Assembler.Emit(new bload());
+						Assembler.Emit(new convb_d());
+					}
+					string tmpLabel = "_endStaticCheck" + IfIndex.ToString();
+					IfIndex++;
+					Assembler.Emit(new bnz(tmpLabel));
+					Assign(decl.Assign, true);
+					Assembler.CreateLabel(tmpLabel);
+					
+				}
+				else
+					Assign(decl.Assign, true);
+			}
 		}
 		
 	}

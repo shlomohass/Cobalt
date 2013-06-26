@@ -15,6 +15,7 @@ namespace Cobaltc
 		public VType Type;
 		public bool Constant = false;
 		public bool Pointer = false;
+		public bool Signed = false;
 	}
 	public enum VType
 	{
@@ -42,13 +43,35 @@ namespace Cobaltc
 		private int ScopeIndex = 0;
 		private int StringIndex = 0;
 		public Stack<Scope> Scopes = new Stack<Scope>();
+		public List<Scope> gotoRootScope()
+		{
+			List<Scope> ret = new List<Scope>();
+			while(Scopes.Count > 1)
+				ret.Add(Scopes.Pop());
+			return ret;
+				
+		}
+		public void RestoreScope(List<Scope> scop)
+		{
+			scop.Reverse();
+			foreach(Scope sc in scop)
+				Scopes.Push(sc);
+			
+		}
 		public void DefineType(string t, bool Ptr, VType Type)
 		{
 			UserDefinedType td = new UserDefinedType();
 			td.Name = t;
 			td.Type = Type;
 			td.Name = t;
-			Scopes.Peek().Typedefs.Add(td);
+			int i  = 0;
+			foreach(Scope s in Scopes)
+			{
+				if(i == Scopes.Count -1)
+					s.Typedefs.Add(td);
+				
+				i++;
+			}
 		}
 		public SymbolHelper(ref Assembly asm)
 		{
@@ -79,7 +102,7 @@ namespace Cobaltc
 			}
 			return ret.ToString();
 		}
-		public void DeclareVoidPtr(string name, bool Const = false)
+		public void DeclareVoidPtr(string name, bool glob = false, bool Const = false)
 		{
 			Variable Int = new Variable();
 			Int.Name = name;
@@ -87,10 +110,21 @@ namespace Cobaltc
 			Int.Type = VType.Void;
 			Int.Pointer = true;
 			Int.Constant = Const;
-			Scopes.Peek().Variables.Add(Int);
+			if(!glob)
+				Scopes.Peek().Variables.Add(Int);
+			else
+			{
+				int i  = 0;
+				foreach(Scope s in Scopes)
+				{
+					if(i == Scopes.Count -1)
+						s.Variables.Add(Int);
+					i++;
+				}
+			}
 			Assembler.CreateBuffer(Int.RealName,4);
 		}
-		public void DeclareInt32(string name, bool ptr = false, bool Const = false)
+		public void DeclareInt32(string name,bool glob = false, bool ptr = false, bool Const = false, bool signed = false)
 		{
 			Variable Int = new Variable();
 			Int.Name = name;
@@ -98,10 +132,22 @@ namespace Cobaltc
 			Int.Type = VType.Int32;
 			Int.Pointer = ptr;
 			Int.Constant = Const;
-			Scopes.Peek().Variables.Add(Int);
+			Int.Signed = signed;
+			if(!glob)
+				Scopes.Peek().Variables.Add(Int);
+			else
+			{
+				int i  = 0;
+				foreach(Scope s in Scopes)
+				{
+					if(i == Scopes.Count -1)
+						s.Variables.Add(Int);
+					i++;
+				}
+			}
 			Assembler.CreateBuffer(Int.RealName,4);
 		}
-		public void DeclareInt8(string name, bool ptr = false, bool Const = false)
+		public void DeclareInt8(string name,bool glob = false, bool ptr = false, bool Const = false)
 		{
 			Variable Int = new Variable();
 			Int.Name = name;
@@ -109,7 +155,18 @@ namespace Cobaltc
 			Int.Type = VType.Int8;
 			Int.Pointer = ptr;
 			Int.Constant = Const;
-			Scopes.Peek().Variables.Add(Int);
+			if(!glob)
+				Scopes.Peek().Variables.Add(Int);
+			else
+			{
+				int i  = 0;
+				foreach(Scope s in Scopes)
+				{
+					if(i == Scopes.Count -1)
+						s.Variables.Add(Int);
+					i++;
+				}
+			}
 			if(!ptr)
 				Assembler.CreateBuffer(Int.RealName,1);
 			else
@@ -157,6 +214,18 @@ namespace Cobaltc
 				{
 					if(v.Name == Name)
 						return v.Pointer;
+				}
+			}
+			return false;
+		}
+		public bool isSigned(string Name)
+		{
+			foreach(Scope sc in this.Scopes)
+			{
+				foreach(Variable v in sc.Variables)
+				{
+					if(v.Name == Name)
+						return v.Signed;
 				}
 			}
 			return false;

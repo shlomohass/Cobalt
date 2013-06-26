@@ -19,7 +19,8 @@ namespace Cobaltc
 				else if (this.returnType == VType.Int8)
 					CompileCharExpression(rtn.Value);
 			}
-			Assembler.Emit(new ret());			
+			if(!isInlineMethod)
+				Assembler.Emit(new ret());			
 		}
 		
 	}

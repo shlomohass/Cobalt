@@ -120,14 +120,10 @@ int isprint(char c)
 char tolower(char c)
 {
 	int tmp = (int)c;
-	if(isupper(c))
-		return (char)(tmp - 65) + 97);
-	return c;
+	
 }
 
 char toupper(char c)
 {
-	if(islower(c))
-		return (char)((c - 97) + 65);
-	return c;
+	
 }

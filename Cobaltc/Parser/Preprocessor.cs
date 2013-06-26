@@ -34,7 +34,16 @@ namespace Cobaltc
 			}
 			return null;
 		}
-		
+		private void IncludeFile(string file)
+		{
+			Parser pars = new Parser();
+			pars.Defs = this.Defs;
+			pars.BeginParse(File.ReadAllText(file));
+			IncludedFile include = new IncludedFile(pars.ParseTree);
+			include.Name = file;
+			this.Defs = pars.Defs;
+			this.ParseTree.Add(include);
+		}
 		public List<Token> ParsePreprocessorDirectives()
 		{
 			this.index = 0;
@@ -72,17 +81,23 @@ namespace Cobaltc
 					{
 						readToken();
 						readToken();
-					
 						if(peekToken() is Tokens.StringLiteral)
 						{
 							Tokens.StringLiteral sl = readToken() as Tokens.StringLiteral;
-							Parser pars = new Parser();
-							pars.Defs = this.Defs;
-							pars.BeginParse(File.ReadAllText(sl.Value));
-							this.ParseTree.AddRange(pars.ParseTree);
-							this.Defs = pars.Defs;
+							IncludeFile(sl.Value);
+							
 						}
-						
+						else if (peekToken() is Tokens.LessThan)
+						{
+							readToken();
+							StringBuilder accum = new StringBuilder();
+							while(!(peekToken() is Tokens.GreaterThan))
+							{
+								accum.Append(readToken().ToString());
+							}
+							IncludeFile(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "/include/" + accum.ToString());
+							readToken();
+						}
 					}
 					else if (peekToken(1).ToString() == "import")
 					{
@@ -93,12 +108,7 @@ namespace Cobaltc
 							Tokens.StringLiteral sl = readToken() as Tokens.StringLiteral;
 							if(!importedHeaders.Contains(sl.Value))
 							{
-								importedHeaders.Add(sl.Value);
-								Parser pars = new Parser();
-								pars.Defs = this.Defs;
-								pars.BeginParse(File.ReadAllText(sl.Value));
-								this.ParseTree.AddRange(pars.ParseTree);
-								this.Defs = pars.Defs;
+								IncludeFile( sl.Value);
 							}
 						}
 						

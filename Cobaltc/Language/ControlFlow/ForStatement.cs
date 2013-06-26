@@ -6,12 +6,10 @@ using GruntXProductions;
 
 namespace Cobaltc
 {
-	public class ForStatement : SyntaxNode
+	public class ForStatement :  Loop 
 	{
-		public Expression Compare = new Expression();
 		public Assignment Step;
 		public SyntaxNode Declaration;
-		public Block Body = new Block();
 	}
 }
 

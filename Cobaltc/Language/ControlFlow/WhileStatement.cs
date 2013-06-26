@@ -6,10 +6,8 @@ using GruntXProductions;
 
 namespace Cobaltc
 {
-	public class WhileStatement : SyntaxNode
+	public class WhileStatement :  Loop 
 	{
-		public Expression Compare = new Expression();
-		public Block Body = new Block();
 	}
 }
 

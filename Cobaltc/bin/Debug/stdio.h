@@ -178,7 +178,7 @@ int atoi(char* s)
 	return final;
 }
 
-void itoa(char* s,int i) 
+void itoa(char* s, const int i) 
 {
 	int d;
 	int p = 0;

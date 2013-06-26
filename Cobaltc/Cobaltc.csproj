@@ -33,8 +33,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="ViperReflectionLib">
-      <HintPath>..\..\viper\src\ViperDotNet\bin\Debug\ViperReflectionLib.dll</HintPath>
+    <Reference Include="viper">
+      <HintPath>..\..\viper\src\ViperDotNet\bin\Debug\viper.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -55,9 +55,39 @@
     <Compile Include="Parser\CheckSemi.cs" />
     <Compile Include="Parser\ParseExpression.cs" />
     <Compile Include="Language\Literals.cs" />
-    <Compile Include="CodeGen\CodeGen.cs" />
     <Compile Include="Language\ControlFlow\IfStatement.cs" />
     <Compile Include="Language\SymbolReference.cs" />
+    <Compile Include="Lexer\Lexer.cs" />
+    <Compile Include="Language\IndexAccessor.cs" />
+    <Compile Include="Parser\ParseIndexSet.cs" />
+    <Compile Include="Language\ControlFlow\ForStatement.cs" />
+    <Compile Include="Parser\ParseAssign.cs" />
+    <Compile Include="Language\ControlFlow\WhileStatement.cs" />
+    <Compile Include="Parser\ControlFlow\ParseFor.cs" />
+    <Compile Include="Parser\ControlFlow\ParseIf.cs" />
+    <Compile Include="Parser\ControlFlow\ParseWhile.cs" />
+    <Compile Include="Parser\ControlFlow\ParseCall.cs" />
+    <Compile Include="Language\ControlFlow\FunctionCall.cs" />
+    <Compile Include="Language\ControlFlow\Return.cs" />
+    <Compile Include="Language\inlineIL.cs" />
+    <Compile Include="Language\Cast.cs" />
+    <Compile Include="Language\Typedef.cs" />
+    <Compile Include="Language\PointerReference.cs" />
+    <Compile Include="Language\PointerDereference.cs" />
+    <Compile Include="Parser\ControlFlow\ParseDo.cs" />
+    <Compile Include="Language\ControlFlow\DoStatement.cs" />
+    <Compile Include="Language\File.cs" />
+    <Compile Include="Language\ControlFlow\Loop.cs" />
+    <Compile Include="Preprocessor\PreprocessorParser.cs" />
+    <Compile Include="Preprocessor\Include.cs" />
+    <Compile Include="Preprocessor\Definition.cs" />
+    <Compile Include="Preprocessor\ParseDefine.cs" />
+    <Compile Include="Preprocessor\ParseIfndef.cs" />
+    <Compile Include="Preprocessor\ParseInclude.cs" />
+    <Compile Include="Preprocessor\ParseError.cs" />
+    <Compile Include="Language\ControlFlow\TryStatement.cs" />
+    <Compile Include="Parser\ControlFlow\ParseTry.cs" />
+    <Compile Include="CodeGen\CodeGen.cs" />
     <Compile Include="CodeGen\CompileMethod.cs" />
     <Compile Include="CodeGen\CompileLine.cs" />
     <Compile Include="CodeGen\CompileBlock.cs" />
@@ -68,46 +98,29 @@
     <Compile Include="CodeGen\Expressions\CompileIntExpression.cs" />
     <Compile Include="CodeGen\CodeGenException.cs" />
     <Compile Include="CodeGen\Expressions\CompileStringExpression.cs" />
-    <Compile Include="Parser\Preprocessor.cs" />
-    <Compile Include="Lexer\Lexer.cs" />
-    <Compile Include="Language\IndexAccessor.cs" />
-    <Compile Include="Parser\ParseIndexSet.cs" />
     <Compile Include="CodeGen\CompileIndexAssign.cs" />
-    <Compile Include="Language\ControlFlow\ForStatement.cs" />
-    <Compile Include="Parser\ParseAssign.cs" />
-    <Compile Include="Language\ControlFlow\WhileStatement.cs" />
     <Compile Include="CodeGen\ControlFlow\CallFunction.cs" />
     <Compile Include="CodeGen\ControlFlow\CompileIf.cs" />
     <Compile Include="CodeGen\ControlFlow\CompileFor.cs" />
     <Compile Include="CodeGen\ControlFlow\CompileWhile.cs" />
-    <Compile Include="Parser\ControlFlow\ParseFor.cs" />
-    <Compile Include="Parser\ControlFlow\ParseIf.cs" />
-    <Compile Include="Parser\ControlFlow\ParseWhile.cs" />
-    <Compile Include="Parser\ControlFlow\ParseCall.cs" />
-    <Compile Include="Language\ControlFlow\FunctionCall.cs" />
-    <Compile Include="Language\ControlFlow\Return.cs" />
     <Compile Include="CodeGen\ControlFlow\CompileReturn.cs" />
     <Compile Include="CodeGen\vasm.cs" />
-    <Compile Include="Language\inlineIL.cs" />
-    <Compile Include="Language\Cast.cs" />
-    <Compile Include="Language\Typedef.cs" />
-    <Compile Include="Language\PointerReference.cs" />
     <Compile Include="CodeGen\AssignPointerDereference.cs" />
-    <Compile Include="Language\PointerDereference.cs" />
-    <Compile Include="Parser\ControlFlow\ParseDo.cs" />
-    <Compile Include="Language\ControlFlow\DoStatement.cs" />
     <Compile Include="CodeGen\ControlFlow\CompileDo.cs" />
+    <Compile Include="CodeGen\CompileRoot.cs" />
+    <Compile Include="CodeGen\ControlFlow\CompileTry.cs" />
+    <Compile Include="CodeGen\Expressions\CompileBinOp.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Parser\" />
-    <Folder Include="CodeGen\" />
     <Folder Include="Language\" />
     <Folder Include="Language\ControlFlow\" />
-    <Folder Include="CodeGen\Expressions\" />
     <Folder Include="Preprocessor\" />
     <Folder Include="Lexer\" />
-    <Folder Include="CodeGen\ControlFlow\" />
     <Folder Include="Parser\ControlFlow\" />
+    <Folder Include="CodeGen\" />
+    <Folder Include="CodeGen\Expressions\" />
+    <Folder Include="CodeGen\ControlFlow\" />
   </ItemGroup>
 </Project>

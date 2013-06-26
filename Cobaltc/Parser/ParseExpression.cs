@@ -20,6 +20,13 @@ namespace Cobaltc
 				ret = new StringLiteral(((Tokens.StringLiteral)readToken()).Value);
 				
 			}
+			else if (peekToken() is Tokens.Tilda)
+			{
+				readToken();
+				Not nt = new Not();
+				nt.Op = getNode(checkForArrays);
+				ret = nt;
+			}
 			else if (peekToken() is Tokens.Dereference)
 			{
 				PointerReference ptr = new PointerReference();
@@ -94,6 +101,16 @@ namespace Cobaltc
 				nxp.Value.Add(AND);
 				return nxp;
 			}
+			else if(peekToken() is Tokens.BooleanOr)
+			{
+				readToken();
+				BooleanOr OR = new BooleanOr();
+				OR.Op1 = InitVal;
+				OR.Op2 = ParseExpression(true);
+				Expression nxp = new Expression();
+				nxp.Value.Add(OR);
+				return nxp;
+			}
 			else
 				throw new ParserException("Unexpected " + peekToken().ToString());
 		}
@@ -102,7 +119,7 @@ namespace Cobaltc
 			Expression exp = new Expression();
 			while(true)
 			{
-				if(peekToken() is Tokens.BooleanAnd && firstTime)
+				if((peekToken() is Tokens.BooleanAnd || peekToken() is Tokens.BooleanOr )&& firstTime)
 				{
 					return ParseBooleanExpression(exp);
 				}
@@ -186,6 +203,52 @@ namespace Cobaltc
 							mul.Op1 = n1;
 							mul.Op2 = getNode();
 							exp.Value.Add(mul);
+						}
+						else if (peekToken() is Tokens.And)
+						{
+							readToken();
+							And band = new And();
+							band.Op1 = n1;
+							band.Op2 = getNode();
+							exp.Value.Add(band);
+						}
+						else if (peekToken() is Tokens.Pipe)
+						{
+							readToken();
+							Bor or = new Bor();
+							or.Op1 = n1;
+							or.Op2 = getNode();
+							exp.Value.Add(or);
+						}
+						else if (peekToken() is Tokens.LeftBitshift)
+						{
+							readToken();
+							Shl sl = new Shl();
+							sl.Op1 = n1;
+							sl.Op2 = getNode();
+							exp.Value.Add(sl);
+						}
+						else if (peekToken() is Tokens.RightBitshift)
+						{
+							readToken();
+							Shr sr = new Shr();
+							sr.Op1 = n1;
+							sr.Op2 = getNode();
+							exp.Value.Add(sr);
+						}
+						else if (peekToken() is Tokens.Question)
+						{
+							readToken();
+							Ternary tern = new Ternary();
+							tern.Op1 = n1;
+							tern.Op2 = getNode();
+							if(!(readToken() is Tokens.Colon))
+								throw new ParserException(": Expected!");
+							else	
+							{
+								tern.DefaultValue = getNode();
+								exp.Value.Add(tern);
+							}
 						}
 						else
 						{

@@ -21,7 +21,7 @@ namespace Cobaltc
 				if(returnType == VType.Unknown)
 					Errors.Add("Unknown type " + meth.ReturnType); 
 			}
-			if(meth.External)
+			if(meth.External || meth.Inline)
 			{
 				Assembler.CreateExternalSymbol(meth.Name);
 				return;

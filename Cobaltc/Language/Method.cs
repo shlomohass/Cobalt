@@ -14,6 +14,8 @@ namespace Cobaltc
 		public List<Declaration> Arguments = new List<Declaration>();
 		public bool External = false;
 		public bool ReturnsPtr = false;
+		public bool Static = false;
+		public bool Inline = false;
 		public Method()
 		{
 		}

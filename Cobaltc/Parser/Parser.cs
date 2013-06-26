@@ -10,6 +10,7 @@ namespace Cobaltc
 		private Lexer Scanner;
 		private List<Token> tokens = new List<Token>();
 		private int index = 0;
+		public List<string> ParserErrors = new List<string>();
 		public List<SyntaxNode> ParseTree;
 		private Token peekToken(int indx)
 		{
@@ -48,7 +49,7 @@ namespace Cobaltc
 				{
 					readToken();
 					Typedef td = new Typedef();
-					td.Typdef = ParseDeclaration();
+					td.Typdef = ParseDeclaration(false);
 					CheckSemi();
 					ParseTree.Add(td);
 				}
@@ -63,8 +64,13 @@ namespace Cobaltc
 				else if (peekToken().ToString() == "extern")
 				{
 					readToken();
-					ParseTree.Add(ParseMethod(true));
+					ParseTree.Add(ParseMethod(false, true));
 					CheckSemi();
+				}
+				else if (peekToken().ToString() == "inline")
+				{
+					readToken();
+					ParseTree.Add(ParseMethod(true));
 				}
 				else if (isDecaration())
 				{
@@ -77,6 +83,8 @@ namespace Cobaltc
 					throw new ParserException("Parse encountered unexpected " + readToken().ToString());
 				}
 			}
+			if(this.ParserErrors.Count > 0)
+				throw new ParserException(this.ParserErrors.Count + " error(s) were found during parsing@");
 		}
 	}
 }

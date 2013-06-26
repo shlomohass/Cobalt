@@ -26,6 +26,7 @@ namespace GruntXProductions
 		public class Div : Token { public override string ToString(){ return "/";}}
 		public class Mul : Token { public override string ToString(){ return "*";}}
 		public class Percent : Token {public override string ToString(){ return "%";} }
+		public class Dot : Token {public override string ToString(){ return ".";} }
 		public class Pipe : Token { public override string ToString(){ return "|";}}
 		public class And : Token { public override string ToString(){ return "&";}}
 		public class At : Token {public override string ToString(){ return "@";} }
@@ -33,6 +34,8 @@ namespace GruntXProductions
 		public class SemiColon : Token { public override string ToString(){ return ";";}}
 		public class Comma: Token {public override string ToString(){ return ",";} }
 		public class Hash: Token {public override string ToString(){ return "#";} }
+		public class Question : Token {public override string ToString(){ return "?";} }
+		public class Tilda: Token {public override string ToString(){ return "~";} }
 		public class StringLiteral : Token { public string Value; }
 		public class IntLiteral : Token { public int Value; }
 		public class FloatLiteral : Token { public float Value; }
@@ -277,6 +280,9 @@ namespace GruntXProductions
 					case '%':
 						addToken(new Tokens.Percent());
 						break;
+					case '?':
+						addToken(new Tokens.Question());
+						break;
 					case '/':
 						addToken(new Tokens.Div());
 						break;
@@ -285,6 +291,9 @@ namespace GruntXProductions
 						break;
 					case ',':
 						addToken(new Tokens.Comma());
+						break;
+					case '.':
+						addToken(new Tokens.Dot());
 						break;
 					case ':':
 						addToken(new Tokens.Colon());
@@ -321,6 +330,9 @@ namespace GruntXProductions
 						break;
 					case '}':
 						addToken(new Tokens.closeCurlyBracket());
+						break;
+					case '~':
+						addToken(new Tokens.Tilda());
 						break;
 					case '(' :
 						addToken(new Tokens.openParenthesis());

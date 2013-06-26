@@ -214,10 +214,15 @@ namespace vasm
                     readToken();
                     asm.Emit(new ret());
                 }
-                else if (peekToken().ToString().ToLower() == "pop")
+                else if (peekToken().ToString().ToLower() == "pop_d")
                 {
                     readToken();
-                    WriteInstruction(POP, (uint)0);
+                    asm.Emit(new pop_d());
+                }
+                else if (peekToken().ToString().ToLower() == "pop_b")
+                {
+                    readToken();
+                    asm.Emit(new pop_b());
                 }
                 else if (peekToken().ToString().ToLower() == "proc")
                 {
@@ -518,7 +523,7 @@ namespace vasm
                             this.result.Add(Scanner.Colon);
                             break;
                         default:
-                            throw new System.Exception("Scanner encountered unrecognized character '" + ch + "'");
+                            throw new System.Exception("Scanner encountered unrecognized character '" + ch + "'" + ((char)input.Read()).ToString()+ ((char)input.Read()).ToString()+ ((char)input.Read()).ToString()+ ((char)input.Read()).ToString()+ ((char)input.Read()).ToString());
                     }
 
             }
