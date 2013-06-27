@@ -40,9 +40,9 @@ namespace Cobaltc
 					SymHelper.BeginScope();
 					foreach(Declaration decl in inlineMethod.Arguments)
 					{
-						DeclareVar(decl);
+						DeclareVar(decl, true);
 						Assembler.Emit(new push_ptr(SymHelper[decl.Name]));
-						if(getTypeFromName(decl.Type) == VType.Int32 || decl.Pointer)
+						if(getTypeFromName(decl.Type) == VType.Int32 || decl.Pointer || getTypeFromName(decl.Type) == VType.String)
 							Assembler.Emit(new dstore());
 						else if (getTypeFromName(decl.Type) == VType.Int8)
 							Assembler.Emit(new bstore());

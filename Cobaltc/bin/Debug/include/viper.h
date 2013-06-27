@@ -5,5 +5,5 @@
 typedef unsigned int DWORD;
 typedef unsigned char BYTE;
 typedef int* IntPtr;
-extern void WriteString(DWORD fd, IntPtr str);
+extern void WriteString(DWORD fd, char* str);
 extern char* toString(int data);

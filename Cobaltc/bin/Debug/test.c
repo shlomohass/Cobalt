@@ -7,19 +7,12 @@
 #include <ctype.h>
 #include <viper.h>
 
+char* lol;
 void main()
 {
-	int opt = 25 - 5;
-	int test =  add(4, 5 + 0);
-	printf("%u and %u\n", opt, 4 + 4);	
-}
-
-inline int add(int n1, int n2)
-{
-	return n1 + n2;
-}
-void lol(int i, int d)
-{
-	i = 3;
-	d = 5;
+	printf("Hello %s", "World!");
+	puts("\nw00t\n");
+	char* buff = malloc(10); // This will get freed (0x0A bytes)
+	lol = malloc(20); // This will stay, because LOL is global. (0x
+	lol = 0;
 }

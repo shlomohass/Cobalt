@@ -14,10 +14,11 @@ namespace Cobaltc
 		private bool ReturnPtr = false;
 		public void CompileMethod(Method meth)
 		{
+			this.ReturnPtr = meth.ReturnsPtr;
 			if(meth.ReturnType != "void")
 			{
 				returnType = getTypeFromName(meth.ReturnType);
-				this.ReturnPtr = meth.ReturnsPtr;
+				
 				if(returnType == VType.Unknown)
 					Errors.Add("Unknown type " + meth.ReturnType); 
 			}
@@ -29,14 +30,14 @@ namespace Cobaltc
 			
 			Assembler.CreateGlobalLabel(meth.Name);
 			SymHelper.BeginScope(meth.Name);
+			SymbolHelper.LocalIndex = 0;
 			foreach(Declaration decl in meth.Arguments)
 			{
-				DeclareVar(decl);
-				Assembler.Emit(new push_ptr(SymHelper[decl.Name]));
-				if(getTypeFromName(decl.Type) == VType.Int32 || decl.Pointer)
-					Assembler.Emit(new dstore());
+				DeclareVar(decl, true);
+				if(getTypeFromName(decl.Type) == VType.Int32 || decl.Pointer || getTypeFromName(decl.Type) ==VType.String)
+					Assembler.Emit(new stloc_d(SymHelper.getIndex(decl.Name)));
 				else if (getTypeFromName(decl.Type) == VType.Int8)
-					Assembler.Emit(new bstore());
+					Assembler.Emit(new stloc_b(SymHelper.getIndex(decl.Name)));
 			}
 			CompileBlock(meth.block);
 			SymHelper.EndScope();

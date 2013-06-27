@@ -224,6 +224,12 @@ namespace vasm
                     readToken();
                     asm.Emit(new pop_b());
                 }
+                else if (peekToken().ToString().ToLower() == "ldloc_d")
+                {
+                    readToken();
+					uint data = (uint)(int)readToken();
+                    asm.Emit(new ldloc_d(data));
+                }
                 else if (peekToken().ToString().ToLower() == "proc")
                 {
                     readToken();

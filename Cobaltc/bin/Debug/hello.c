@@ -2,7 +2,7 @@
 #include <string.h> 
 #include <ctype.h>
 
-static unsigned int sentences, words, letters;
+unsigned int sentences, words, letters;
 int main()
 {
 	words = 1;
@@ -19,6 +19,7 @@ int main()
 				i++; // Eat whitespaces!
 			}
 		}
+	printf("i is %u\n", i);
 	}
 	printf("The paragraph %s has:\n\n", paragraph);
 	printf("%u Words\n", words);

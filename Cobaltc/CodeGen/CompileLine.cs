@@ -13,7 +13,7 @@ namespace Cobaltc
 		public void CompileLine(SyntaxNode sn)
 		{
 			if(sn is Declaration)
-				DeclareVar(sn as Declaration);
+				DeclareVar(sn as Declaration, true);
 			else if (sn is Return)
 				CompileReturn(sn as Return);
 			else if (sn is Assignment)
@@ -54,7 +54,8 @@ namespace Cobaltc
 				{
 					foreach(Variable v in sc.Variables)
 					{
-						il.IL = il.IL.Replace("%" + v.Name, v.RealName);
+						if(v.Local)
+						il.IL = il.IL.Replace("%" + v.Name, v.LocalIndex.ToString());
 					}
 				}
 				vasm.MainClass.Complile(il.IL,ref Assembler);

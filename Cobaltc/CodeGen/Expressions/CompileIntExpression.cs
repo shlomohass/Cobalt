@@ -33,7 +33,12 @@ namespace Cobaltc
 					if(SymHelper.isPointer(ptr.Symbol))
 						Errors.Add("Can not reference pointer " + ptr.Symbol);
 					else
-						Assembler.Emit(new push_ptr(SymHelper[ptr.Symbol]));
+					{
+						if(!SymHelper.isLocal(ptr.Symbol))
+							Assembler.Emit(new push_ptr(SymHelper[ptr.Symbol]));
+						else
+							Assembler.Emit(new ldloc_ptr(SymHelper.getIndex(ptr.Symbol)));
+					}
 				}
 				else
 				{
@@ -73,8 +78,13 @@ namespace Cobaltc
 						Errors.Add(Ref.Symbol + " can not be converted to int!");
 					else
 					{
-						Assembler.Emit(new push_ptr(SymHelper[Ref.Symbol]));
-						Assembler.Emit(new dload());
+						if(!SymHelper.isLocal(Ref.Symbol))
+						{
+							Assembler.Emit(new push_ptr(SymHelper[Ref.Symbol]));
+							Assembler.Emit(new dload());
+						} else 
+							Assembler.Emit(new ldloc_d(SymHelper.getIndex(Ref.Symbol)));	
+						
 					}
 						
 				}
@@ -191,8 +201,12 @@ namespace Cobaltc
 						Errors.Add(Ref.Symbol + " can not be converted to int!");
 					else
 					{
-						Assembler.Emit(new push_ptr(SymHelper[Ref.Symbol]));
-						Assembler.Emit(new bload());
+						if(!SymHelper.isLocal(Ref.Symbol))
+						{
+							Assembler.Emit(new push_ptr(SymHelper[Ref.Symbol]));
+							Assembler.Emit(new bload());
+						} else 
+							Assembler.Emit(new ldloc_b(SymHelper.getIndex(Ref.Symbol)));	
 					}
 						
 				}

@@ -10,24 +10,24 @@ namespace Cobaltc
 {
 	public partial class CodeGen
 	{
-		public void DeclareVar(DeclarationGroup decl, bool Global = false)
+		public void DeclareVar(DeclarationGroup decl,bool local,  bool Global = false)
 		{
 			foreach(Declaration dec in decl.Declarations)
-				DeclareVar(dec,Global);
+				DeclareVar(dec,local, Global);
 		}
-		public void DeclareVar(Declaration decl, bool Global = false)
+		public void DeclareVar(Declaration decl, bool local, bool Global = false)
 		{
 			if(decl is DeclarationGroup)
 			{
-				DeclareVar(decl as DeclarationGroup, Global);
+				DeclareVar(decl as DeclarationGroup, local, Global);
 				return;
 			}
 			if(getTypeFromName(decl.Type) == VType.Int32)
-				SymHelper.DeclareInt32(decl.Name, Global, decl.Pointer, decl.Constant);	
+				SymHelper.DeclareInt32(decl.Name, local, Global, decl.Pointer, decl.Constant);	
 			else if (getTypeFromName(decl.Type) == VType.Int8)
-				SymHelper.DeclareInt8(decl.Name,  Global,decl.Pointer, decl.Constant);
+				SymHelper.DeclareInt8(decl.Name,local,   Global,decl.Pointer, decl.Constant);
 			else if (getTypeFromName(decl.Type) == VType.Void && decl.Pointer)
-				SymHelper.DeclareVoidPtr(decl.Name, Global,decl.Constant);
+				SymHelper.DeclareVoidPtr(decl.Name, local, Global,decl.Constant);
 			else
 			{
 				Errors.Add(decl.Type + " does not exist in the current context!");

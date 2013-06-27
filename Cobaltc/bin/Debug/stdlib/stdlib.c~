@@ -1,17 +1,12 @@
 
 typedef unsigned int size_t; 
 
+#define NULL 0
+
 #include "viper.h"
 #include "stdio.h"
 #include "string.h"
 #include "ctype.h"
-
-int main()
-{
-	printf("This is a library silly... Other programs are supposed to use this.. Its not supposed to be run... Don't run me... Thank you\n");
-}
-
-
 
 void abort()
 {
@@ -20,11 +15,10 @@ void abort()
 }
 void* malloc(size_t size)
 {
-	asm("push ptr %size");
-	asm("dload");
+	asm("ldloc_d %size");
 	asm("heapalloc");
 	asm("ret");
-	return NULL;
+	return 0;
 }
 void* calloc(size_t elem, size_t elemsize)
 {
@@ -32,8 +26,7 @@ void* calloc(size_t elem, size_t elemsize)
 }
 void free(void* size)
 {
-	asm("push ptr %size");
-	asm("dload");
+	asm("ldloc_d %size");
 	asm("heapfree");
 	asm("ret");
 	return NULL;

@@ -11,16 +11,14 @@ namespace Cobaltc
 		
 		public static void Main (string[] args)
 		{
-			int neg = -1;
-			uint id = (uint)neg;
-			
-			Console.WriteLine(id.ToString());
+		
 			if(args.Length == 0)
 				Console.Error.WriteLine("No input!");
 			else
 			{
 				string Input = Environment.CurrentDirectory + "/" + args[0];
 				string Output = null;
+				bool outputASM = false;
 				Environment.CurrentDirectory = Path.GetDirectoryName(args[0]);
 				Assembly prog = new Assembly();
 				List<string> references = new List<string>();
@@ -31,6 +29,8 @@ namespace Cobaltc
 						Output = args[i + 1];
 						i++;
 					}
+					else if (args[i] == "-s")
+						outputASM = true;
 					else if (args[i] == "--uselib")
 					{
 						i++;
@@ -48,12 +48,23 @@ namespace Cobaltc
 					parser.BeginParse(File.ReadAllText(Input));
 					cgen = new CodeGen(prog,parser.ParseTree);
 					cgen.Compile();
+					if(outputASM)
+					{
+						StreamWriter sw = new StreamWriter(Output);
+						foreach(Instruction i in cgen.Assembler.innerCode)
+						{
+							sw.WriteLine("0x" + i.Address.ToString("X8") + ":  " + i.Mnemonic.ToString() + " " + i.Operand.ToString());
+						}
+						sw.Close();
+					}
+					else
+					{
 					foreach(string lib in references)
 						cgen.Assembler.Merge(GEX.Open(lib, false));
-					cgen.Assembler.Metadata.Add("languagef","cobalt");
+					cgen.Assembler.Metadata.Add("languageLOL","cobalt");
 					cgen.Assembler.CreateMethodAttribute("test",new System.Collections.Specialized.NameValueCollection());
 					cgen.Assembler.SaveGEX(Output);
-					
+					}
 					
 				}
 				catch(ParserException exp)

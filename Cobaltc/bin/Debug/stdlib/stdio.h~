@@ -1,6 +1,7 @@
 #include "viper.h"
 
 
+
 void puts(const char* str)
 {
 	char* nb = (char*)malloc(strlen(str) + 2);
@@ -47,6 +48,7 @@ void fprintf(int fd, const char* format)
 {
 	int len = strlen(format);
 	char* tmpBuffer = " ";
+	puts(toString(len));
 	for(int i = 0; i < len; i++)
 	{
 		if(format[i] == '%')

@@ -6,17 +6,14 @@ typedef char* string;
 
 void WriteString(DWORD fd, IntPtr str)
 {
-	asm("push ptr %fd");
-	asm("dload");
-	asm("push ptr %str");
-	asm("dload");
+	asm("ldloc_d %fd");
+	asm("ldloc_d %str");
 	asm("sysf 1");
 }
 
 char* toString(int data)
 {
-	asm("push ptr %data");
-	asm("dload");
+	asm("ldloc_d %data");
 	asm("sysf 5");
 	asm("ret");
 }

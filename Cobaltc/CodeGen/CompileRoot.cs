@@ -24,10 +24,10 @@ namespace Cobaltc
 					if(decl.Static)
 					{
 						decl.Static = false;
-						DeclareVar(decl);
+						DeclareVar(decl, false);
 					}
 					else
-						DeclareVar(sn as Declaration, true);	
+						DeclareVar(sn as Declaration, false);	
 				}
 				else if (sn is IncludedFile)
 				{

@@ -26,7 +26,7 @@ namespace Cobaltc
 				else
 				{
 					
-					DeclareVar(trystat.ExceptionInfo);
+					DeclareVar(trystat.ExceptionInfo, true);
 					Assembler.Emit(new push_ptr(this.SymHelper[trystat.ExceptionInfo.Name]));
 					Assembler.Emit(new dstore());
 				}

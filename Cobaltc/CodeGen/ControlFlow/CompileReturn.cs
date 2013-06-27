@@ -14,7 +14,7 @@ namespace Cobaltc
 		{
 			if(rtn.Value.Value.Count > 0)
 			{
-				if(this.returnType == VType.Int32 || this.ReturnPtr)
+				if(this.returnType == VType.Int32 || this.ReturnPtr || this.returnType == VType.Void)
 					CompileIntExpression(rtn.Value);
 				else if (this.returnType == VType.Int8)
 					CompileCharExpression(rtn.Value);

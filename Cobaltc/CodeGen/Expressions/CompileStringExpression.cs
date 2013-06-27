@@ -38,8 +38,12 @@ namespace Cobaltc
 						Errors.Add(Ref.Symbol + " can not be converted to string!");
 					else
 					{
-						Assembler.Emit(new push_ptr(SymHelper[Ref.Symbol]));
-						Assembler.Emit(new dload());
+						if(!SymHelper.isLocal(Ref.Symbol))
+						{
+							Assembler.Emit(new push_ptr(SymHelper[Ref.Symbol]));
+							Assembler.Emit(new dload());
+						} else 
+							Assembler.Emit(new ldloc_d(SymHelper.getIndex(Ref.Symbol)));
 					}
 						
 				}

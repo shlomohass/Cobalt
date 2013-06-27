@@ -1,6 +1,7 @@
 #include "viper.h"
 
 
+
 void puts(const char* str)
 {
 	char* nb = (char*)malloc(strlen(str) + 2);

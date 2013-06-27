@@ -8,13 +8,6 @@ typedef unsigned int size_t;
 #include "string.h"
 #include "ctype.h"
 
-int main()
-{
-	printf("This is a library silly... Other programs are supposed to use this.. Its not supposed to be run... Don't run me... Thank you\n");
-}
-
-
-
 void abort()
 {
 	asm("push ptr 0");
@@ -22,11 +15,10 @@ void abort()
 }
 void* malloc(size_t size)
 {
-	asm("push ptr %size");
-	asm("dload");
+	asm("ldloc_d %size");
 	asm("heapalloc");
 	asm("ret");
-	return NULL;
+	return 'a';
 }
 void* calloc(size_t elem, size_t elemsize)
 {
@@ -34,8 +26,7 @@ void* calloc(size_t elem, size_t elemsize)
 }
 void free(void* size)
 {
-	asm("push ptr %size");
-	asm("dload");
+	asm("ldloc_d %size");
 	asm("heapfree");
 	asm("ret");
 	return NULL;

@@ -22,16 +22,24 @@ namespace Cobaltc
 				if(SymHelper.getType(asn.Var) == VType.Int32 || SymHelper.isPointer(asn.Var))
 				{
 					CompileIntExpression(asn.Value, SymHelper.isSigned(asn.Var));
+					if(!SymHelper.isLocal(asn.Var))
+					{
+						Console.WriteLine(asn.Var + " is not LOCAL!");
+						Assembler.Emit(new push_ptr(SymHelper[asn.Var]));
+						Assembler.Emit(new dstore());
+					} else 
 					
-					Assembler.Emit(new push_ptr(SymHelper[asn.Var]));
-					Assembler.Emit(new dstore());
+						Assembler.Emit(new stloc_d(SymHelper.getIndex(asn.Var)));
 				}
 				else if (SymHelper.getType(asn.Var) == VType.Int8)
 				{
 					CompileCharExpression(asn.Value);
-					
-					Assembler.Emit(new push_ptr(SymHelper[asn.Var]));
-					Assembler.Emit(new bstore());
+					if(!SymHelper.isLocal(asn.Var))
+					{
+						Assembler.Emit(new push_ptr(SymHelper[asn.Var]));
+						Assembler.Emit(new bstore());
+					} else 
+						Assembler.Emit(new stloc_b(SymHelper.getIndex(asn.Var)));
 					
 				}
 				else if(GuessType(asn.Value) == VType.String)
@@ -41,8 +49,12 @@ namespace Cobaltc
 					else
 					{
 						CompileStringExpression(asn.Value);
-						Assembler.Emit(new push_ptr(SymHelper[asn.Var]));
-						Assembler.Emit(new dstore());
+						if(!SymHelper.isLocal(asn.Var))
+						{
+							Assembler.Emit(new push_ptr(SymHelper[asn.Var]));
+							Assembler.Emit(new dstore());
+						} else 
+							Assembler.Emit(new stloc_d(SymHelper.getIndex(asn.Var)));
 					}
 				}
 				else

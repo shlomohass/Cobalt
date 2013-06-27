@@ -16,6 +16,8 @@ namespace Cobaltc
 		public bool Constant = false;
 		public bool Pointer = false;
 		public bool Signed = false;
+		public bool Local = false;
+		public uint LocalIndex = 0;
 	}
 	public enum VType
 	{
@@ -42,6 +44,7 @@ namespace Cobaltc
 		private Assembly Assembler;
 		private int ScopeIndex = 0;
 		private int StringIndex = 0;
+		public static uint LocalIndex = 0;
 		public Stack<Scope> Scopes = new Stack<Scope>();
 		public List<Scope> gotoRootScope()
 		{
@@ -102,7 +105,7 @@ namespace Cobaltc
 			}
 			return ret.ToString();
 		}
-		public void DeclareVoidPtr(string name, bool glob = false, bool Const = false)
+		public void DeclareVoidPtr(string name, bool local,  bool glob = false, bool Const = false)
 		{
 			Variable Int = new Variable();
 			Int.Name = name;
@@ -110,6 +113,12 @@ namespace Cobaltc
 			Int.Type = VType.Void;
 			Int.Pointer = true;
 			Int.Constant = Const;
+			Int.Local = local;
+			if(local)
+			{
+				Int.LocalIndex = LocalIndex;
+				LocalIndex++;
+			}
 			if(!glob)
 				Scopes.Peek().Variables.Add(Int);
 			else
@@ -122,9 +131,10 @@ namespace Cobaltc
 					i++;
 				}
 			}
-			Assembler.CreateBuffer(Int.RealName,4);
+			if(!local)
+				Assembler.CreateBuffer(Int.RealName,4);
 		}
-		public void DeclareInt32(string name,bool glob = false, bool ptr = false, bool Const = false, bool signed = false)
+		public void DeclareInt32(string name,  bool local, bool glob = false, bool ptr = false, bool Const = false, bool signed = false)
 		{
 			Variable Int = new Variable();
 			Int.Name = name;
@@ -133,6 +143,12 @@ namespace Cobaltc
 			Int.Pointer = ptr;
 			Int.Constant = Const;
 			Int.Signed = signed;
+			Int.Local = local;
+			if(local)
+			{
+				Int.LocalIndex = LocalIndex;
+				LocalIndex++;
+			}
 			if(!glob)
 				Scopes.Peek().Variables.Add(Int);
 			else
@@ -145,16 +161,23 @@ namespace Cobaltc
 					i++;
 				}
 			}
-			Assembler.CreateBuffer(Int.RealName,4);
+			if(!local)
+				Assembler.CreateBuffer(Int.RealName,4);
 		}
-		public void DeclareInt8(string name,bool glob = false, bool ptr = false, bool Const = false)
+		public void DeclareInt8(string name,  bool local,bool glob = false, bool ptr = false, bool Const = false)
 		{
 			Variable Int = new Variable();
 			Int.Name = name;
 			Int.RealName = GetScopePrefix() + name;
 			Int.Type = VType.Int8;
 			Int.Pointer = ptr;
+			Int.Local = local;
 			Int.Constant = Const;
+			if(local)
+			{
+				Int.LocalIndex = LocalIndex;
+				LocalIndex++;
+			}
 			if(!glob)
 				Scopes.Peek().Variables.Add(Int);
 			else
@@ -167,10 +190,13 @@ namespace Cobaltc
 					i++;
 				}
 			}
-			if(!ptr)
-				Assembler.CreateBuffer(Int.RealName,1);
-			else
-				Assembler.CreateBuffer(Int.RealName,4);
+			if(!local)
+			{
+				if(!ptr)
+					Assembler.CreateBuffer(Int.RealName,1);
+				else
+					Assembler.CreateBuffer(Int.RealName,4);
+			}
 		}
 		public string DeclareStringLiteral(string val)
 		{
@@ -217,6 +243,30 @@ namespace Cobaltc
 				}
 			}
 			return false;
+		}
+		public bool isLocal(string Name)
+		{
+			foreach(Scope sc in this.Scopes)
+			{
+				foreach(Variable v in sc.Variables)
+				{
+					if(v.Name == Name)
+						return v.Local;
+				}
+			}
+			return false;
+		}
+		public uint getIndex(string Name)
+		{
+			foreach(Scope sc in this.Scopes)
+			{
+				foreach(Variable v in sc.Variables)
+				{
+					if(v.Name == Name)
+						return v.LocalIndex;
+				}
+			}
+			return 0;
 		}
 		public bool isSigned(string Name)
 		{
