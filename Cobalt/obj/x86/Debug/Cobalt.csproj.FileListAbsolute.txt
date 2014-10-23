@@ -1,0 +1,4 @@
+c:\users\grunt\documents\visual studio 2010\Projects\Cobalt\Cobalt\bin\Debug\cobalt.exe
+c:\users\grunt\documents\visual studio 2010\Projects\Cobalt\Cobalt\bin\Debug\cobalt.pdb
+c:\users\grunt\documents\visual studio 2010\Projects\Cobalt\Cobalt\obj\x86\Debug\cobalt.exe
+c:\users\grunt\documents\visual studio 2010\Projects\Cobalt\Cobalt\obj\x86\Debug\cobalt.pdb
